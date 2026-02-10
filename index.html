@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Will You Be My Valentine?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
     <style>
-        /* General Page Styling */
         body {
             margin: 0;
             padding: 0;
@@ -15,10 +15,9 @@
             background-color: #fce7f3;
             font-family: 'Arial', sans-serif;
             overflow: hidden; 
-            touch-action: manipulation; /* Improves touch response */
+            touch-action: manipulation;
         }
 
-        /* The Card Container */
         .container {
             text-align: center;
             background: rgba(255, 255, 255, 0.9);
@@ -29,7 +28,6 @@
             max-width: 400px;
         }
 
-        /* Images (GIFs) */
         .gif-container img {
             width: 100%;
             max-width: 200px;
@@ -38,25 +36,23 @@
             margin-bottom: 15px;
         }
 
-        /* The Question Text */
         h1 {
             color: #be185d;
             font-size: 1.8rem;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             text-transform: lowercase;
             line-height: 1.2;
         }
 
-        /* Buttons Area */
         .buttons {
             display: flex;
-            justify-content: center;
-            gap: 15px;
+            justify-content: center; /* This centers them side by side */
+            align-items: center;
+            gap: 20px; /* Space between buttons */
             margin-top: 20px;
-            height: 50px; /* Reserve height so layout doesn't jump */
+            min-height: 50px;
         }
 
-        /* Shared Button Styles */
         button {
             padding: 12px 25px;
             font-size: 1rem;
@@ -64,11 +60,10 @@
             border-radius: 50px;
             cursor: pointer;
             font-weight: bold;
-            -webkit-tap-highlight-color: transparent; /* Removes blue highlight on mobile tap */
+            -webkit-tap-highlight-color: transparent;
             transition: all 0.2s ease;
         }
 
-        /* Yes Button */
         #yesBtn {
             background-color: #ec4899;
             color: white;
@@ -76,21 +71,23 @@
             z-index: 10;
         }
 
-        /* No Button */
         #noBtn {
             background-color: #e5e7eb;
             color: #374151;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            position: absolute; /* Allows it to move freely immediately */
+            /* Removed 'position: absolute' so it sits normally initially */
         }
 
-        /* Placeholder for No button to keep layout stable initially */
-        .no-btn-placeholder {
-            width: 80px; 
-            height: 45px;
+        #plea-message {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #db2777;
+            font-weight: bold;
+            min-height: 1.5em; 
+            opacity: 0; 
+            transition: opacity 0.3s;
         }
 
-        /* Responsive Text */
         @media (max-width: 400px) {
             h1 { font-size: 1.5rem; }
             button { padding: 10px 20px; font-size: 0.9rem; }
@@ -101,17 +98,16 @@
 
     <div class="container">
         <div id="question-screen">
-            <div class="gif-container">
-                <img src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" alt="Cute bear">
-            </div>
+            <div class="tenor-gif-embed" data-postid="16022705" data-share-method="host" data-aspect-ratio="0.99375" data-width="100%"><a href="https://tenor.com/view/erm-fingers-hmmm-cat-guilty-gif-16022705">Erm Fingers Sticker</a>from <a href="https://tenor.com/search/erm-stickers">Erm Stickers</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
             
-            <h1>nirali will you be my valentine?</h1>
+            <h1>Shweta will you be my valentine?</h1>
             
             <div class="buttons">
                 <button id="yesBtn">Yes</button>
-                <div class="no-btn-placeholder"></div> 
                 <button id="noBtn">No</button>
             </div>
+            
+            <div id="plea-message"></div>
         </div>
 
         <div id="success-screen" style="display: none;">
@@ -125,33 +121,49 @@
         const successScreen = document.getElementById('success-screen');
         const yesBtn = document.getElementById('yesBtn');
         const noBtn = document.getElementById('noBtn');
+        const messageEl = document.getElementById('plea-message');
 
-        // Function to move the button to a random spot
+        const phrases = [
+            "pretty please 🥺",
+            "pookie please 🎀",
+            "don't be mean 😭",
+            "i'll buy you food 🍟",
+            "you're breaking my heart 💔",
+            "just click yes already! 💖",
+            "think about the cats 🐱",
+            "pleeeeease? 🥺",
+            "why are you doing this? 🥲",
+            "i made this specifically for you! 😤"
+        ];
+
         function moveButton() {
-            // Get the viewport dimensions
-            const maxWidth = window.innerWidth - noBtn.offsetWidth - 20; // 20px padding
-            const maxHeight = window.innerHeight - noBtn.offsetHeight - 20;
-
             // Calculate random position
+            const maxWidth = window.innerWidth - noBtn.offsetWidth - 20;
+            const maxHeight = window.innerHeight - noBtn.offsetHeight - 20;
             const randomX = Math.max(10, Math.floor(Math.random() * maxWidth));
             const randomY = Math.max(10, Math.floor(Math.random() * maxHeight));
 
-            // Apply new position
-            noBtn.style.position = 'fixed'; // Ensure it breaks out of the container
+            // Apply 'fixed' position NOW (when it moves), not before
+            noBtn.style.position = 'fixed'; 
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
+
+            // Change text
+            const randomIndex = Math.floor(Math.random() * phrases.length);
+            messageEl.innerText = phrases[randomIndex];
+            messageEl.style.opacity = 1;
         }
 
-        // DESKTOP: Move on hover
+        // Desktop Hover
         noBtn.addEventListener('mouseover', moveButton);
 
-        // MOBILE: Move on touch
+        // Mobile Touch
         noBtn.addEventListener('touchstart', function(e) {
-            e.preventDefault(); // This is crucial! It stops the "click" from happening
+            e.preventDefault(); 
             moveButton();
         });
 
-        // Click event for Yes
+        // Yes Button Click
         yesBtn.addEventListener('click', () => {
             questionScreen.style.display = 'none';
             successScreen.style.display = 'block';
